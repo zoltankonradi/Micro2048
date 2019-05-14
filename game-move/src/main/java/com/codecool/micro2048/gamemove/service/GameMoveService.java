@@ -30,23 +30,29 @@ public class GameMoveService {
 
     private void move(GameState state, String direction) {
 
-        switch (direction) {
-            case "left":
-                moveLeft(state);
-                break;
-            case "right":
-                moveRight(state);
-                break;
-            case "up":
-                moveUp(state);
-                break;
-            case "down":
-                moveDown(state);
-                break;
-        }
+//        switch (direction) {
+//            case "left":
+//                moveLeft(state);
+//                break;
+//            case "right":
+//                moveRight(state);
+//                break;
+//            case "up":
+//                moveUp(state);
+//                break;
+//            case "down":
+//                moveDown(state);
+//                break;
+//        }
+        // First we have to fill all the gaps
+        shift(state, direction, false);
+        // Second, we have to combine adjacent tiles with the same values
+        shift(state, direction, true);
+        // Third, we have to fill the gaps that are left after tiles have been combined
+        shift(state, direction, false);
     }
 
-    private void shift(GameState state, String direction) {
+    private void shift(GameState state, String direction, boolean canCombineTiles) {
         for (int i = 0; i < 3; i++) {
 
             List<Integer> loopValues = getCenterLoopValues(direction, i);
@@ -57,7 +63,11 @@ public class GameMoveService {
                     int currentFieldIndex = getCurrentFieldIndex(direction, j, k);
                     int adjacentFieldIndex = getAdjacentFieldIndex(direction, j, k);
 
-                    shiftField(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
+                    if (canCombineTiles) {
+                        combineFields(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
+                    } else {
+                        shiftField(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
+                    }
                 }
             }
         }
@@ -71,6 +81,21 @@ public class GameMoveService {
                     loopValues.add(j);
                 }
                 break;
+            case "up":
+                for (int j = 4; j < (13 - i * 4); j += 4) {
+                    loopValues.add(j);
+                }
+                break;
+            case "left":
+                for (int j = 13; j < 16 - i; j++) {
+                    loopValues.add(j);
+                }
+                break;
+            case "right":
+                for (int j = 14; j > 11 + i; j--) {
+                    loopValues.add(j);
+                }
+                break;
         }
         return loopValues;
     }
@@ -79,7 +104,12 @@ public class GameMoveService {
         int currentFieldIndex = -1;
         switch (direction) {
             case "down":
-                currentFieldIndex = j+k;
+            case "up":
+                currentFieldIndex = j + k;
+                break;
+            case "left":
+            case "right":
+                currentFieldIndex = j - k * 4;
                 break;
         }
         return currentFieldIndex;
@@ -90,6 +120,15 @@ public class GameMoveService {
         switch (direction) {
             case "down":
                 adjacentFieldIndex = j+k+4;
+                break;
+            case "up":
+                adjacentFieldIndex = j + k - 4;
+                break;
+            case "left":
+                adjacentFieldIndex = j - k * 4 - 1;
+                break;
+            case "right":
+                adjacentFieldIndex = j - k * 4 + 1;
                 break;
         }
         return adjacentFieldIndex;
