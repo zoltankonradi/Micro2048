@@ -1,5 +1,5 @@
 function init() {
-    // setInterval(getNewQuote, 5000);
+    setInterval(getNewQuote, 5000);
 }
 ////////////////////// QUOTE //////////////////////
 function getNewQuote() {

@@ -213,4 +213,25 @@ class GameMoveServiceTest {
 
         assertFalse(actual.isOver());
     }
+
+    @Test
+    public void testMultipleTilesAdding() {
+        List<Integer> initialBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                4, 0, 0, 0,
+                4, 0, 0, 0,
+                8, 0, 0, 0);
+        GameState actual = new GameState(initialBoardSetup, 0);
+
+        List<Integer> expectedBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+                8, 0, 0, 0,
+                8, 0, 0, 0);
+        GameState expected = new GameState(expectedBoardSetup, 0);
+
+        actual = gameMoveService.calculateMovement("down", actual);
+
+        assertEquals(expected, actual);
+    }
 }
