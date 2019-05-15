@@ -10,7 +10,13 @@ body {
     background-color: white;
     /*background-image: url("https://images.wallpaperscraft.com/image/cat_surprise_look_striped_96597_1920x1080.jpg");*/
 }
-#quote-text{
+#score-text {
+    background-color: white;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+#quote-text {
     background-color: white;
     font-size: 24px;
     font-weight: bold;

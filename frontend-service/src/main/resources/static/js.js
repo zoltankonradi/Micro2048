@@ -1,7 +1,7 @@
 function init() {
     setInterval(getNewQuote, 3500);
 }
-
+////////////////////// QUOTE //////////////////////
 function getNewQuote() {
     let quote = document.getElementById("quote-text");
     // const Http = new XMLHttpRequest();
@@ -13,7 +13,13 @@ function getNewQuote() {
     // }
     quote.innerText = "Now it's a different inspirational quote";
 }
+////////////////////// BACKGROUND IMAGE //////////////////////
+function changeBackgroundImage() {
 
+}
+
+
+////////////////////// GAME LOGIC //////////////////////
 document.onkeydown = function(e) {
     switch (e.keyCode) {
         case 37:
@@ -43,7 +49,7 @@ function sendGameState(keypress) {
     }
     console.log(gameState.substring(1));
     const Http = new XMLHttpRequest();
-    const url='http://localhost:60002/new-state?direction=' + keypress + '&gameState=' + gameState.substring(1) + '&score=' + score;
+    const url='http://localhost:60002/new-state?direction=' + keypress + '&boardSetup=' + gameState.substring(1) + '&score=' + score;
     Http.open("GET", url);
     Http.send();
     Http.onreadystatechange=(e)=>{
