@@ -1,17 +1,18 @@
 function init() {
-    setInterval(getNewQuote, 3500);
+    // setInterval(getNewQuote, 5000);
 }
 ////////////////////// QUOTE //////////////////////
 function getNewQuote() {
     let quote = document.getElementById("quote-text");
-    // const Http = new XMLHttpRequest();
-    // const url='http://localhost:8095/quote';
-    // Http.open("GET", url);
-    // Http.send();
-    // Http.onreadystatechange=(e)=>{
-    //     console.log(Http.responseText)
-    // }
-    quote.innerText = "Now it's a different inspirational quote";
+    const Http = new XMLHttpRequest();
+    const url='http://localhost:8095/quote';
+    Http.open("GET", url);
+    Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:8095");
+    Http.send();
+    Http.onreadystatechange=(e)=>{
+        console.log(Http.responseText);
+        quote.innerText = JSON.parse(Http.responseText).quote;
+    };
 }
 ////////////////////// BACKGROUND IMAGE //////////////////////
 function changeBackgroundImage() {
@@ -47,13 +48,14 @@ function sendGameState(keypress) {
             gameState += ',' + square.innerText
         }
     }
-    console.log(gameState.substring(1));
     const Http = new XMLHttpRequest();
     const url='http://localhost:60003/new-state?direction=' + keypress + '&boardSetup=' + gameState.substring(1) + '&score=' + score;
     Http.open("GET", url);
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:60003");
     Http.send();
     Http.onreadystatechange=(e)=>{
+        console.log(Http.responseText);
+        console.log(JSON.parse(Http.responseText));
         changeGameState(JSON.parse(Http.responseText));
     }
 }
