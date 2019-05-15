@@ -36,7 +36,7 @@ class GameMoveServiceTest {
                 2, 0, 0, 0);
         GameState expected = new GameState(expectedBoardSetup, 0);
 
-        actual = gameMoveService.calculateMovement("left", actual, 0);
+        actual = gameMoveService.calculateMovement("left", actual);
 
         assertEquals(expected, actual);
     }
@@ -57,7 +57,7 @@ class GameMoveServiceTest {
                 0, 0, 0, 2);
         GameState expected = new GameState(expectedBoardSetup, 0);
 
-        actual = gameMoveService.calculateMovement("right", actual, 0);
+        actual = gameMoveService.calculateMovement("right", actual);
 
         assertEquals(expected, actual);
     }
@@ -78,7 +78,7 @@ class GameMoveServiceTest {
                 0, 0, 0, 0);
         GameState expected = new GameState(expectedBoardSetup, 0);
 
-        actual = gameMoveService.calculateMovement("up", actual, 0);
+        actual = gameMoveService.calculateMovement("up", actual);
 
         assertEquals(expected, actual);
     }
@@ -99,7 +99,7 @@ class GameMoveServiceTest {
                 2, 2, 2, 2);
         GameState expected = new GameState(expectedBoardSetup, 0);
 
-        actual = gameMoveService.calculateMovement("down", actual, 0);
+        actual = gameMoveService.calculateMovement("down", actual);
 
         assertEquals(expected, actual);
     }
@@ -118,9 +118,9 @@ class GameMoveServiceTest {
                 0, 0, 0, 0,
                 4, 4, 4, 4,
                 4, 4, 4, 4);
-        GameState expected = new GameState(expectedBoardSetup, 0);
+        GameState expected = new GameState(expectedBoardSetup, 32);
 
-        actual = gameMoveService.calculateMovement("down", actual, 0);
+        actual = gameMoveService.calculateMovement("down", actual);
 
         assertEquals(expected, actual);
     }
@@ -139,9 +139,9 @@ class GameMoveServiceTest {
                 4, 4, 4, 4,
                 0, 0, 0, 0,
                 0, 0, 0, 0);
-        GameState expected = new GameState(expectedBoardSetup, 0);
+        GameState expected = new GameState(expectedBoardSetup, 32);
 
-        actual = gameMoveService.calculateMovement("up", actual, 0);
+        actual = gameMoveService.calculateMovement("up", actual);
 
         assertEquals(expected, actual);
     }
@@ -160,9 +160,9 @@ class GameMoveServiceTest {
                 4, 4, 0, 0,
                 4, 4, 0, 0,
                 4, 4, 0, 0);
-        GameState expected = new GameState(expectedBoardSetup, 0);
+        GameState expected = new GameState(expectedBoardSetup, 32);
 
-        actual = gameMoveService.calculateMovement("left", actual, 0);
+        actual = gameMoveService.calculateMovement("left", actual);
 
         assertEquals(expected, actual);
     }
@@ -181,9 +181,9 @@ class GameMoveServiceTest {
                 0, 0, 4, 4,
                 0, 0, 4, 4,
                 0, 0, 4, 4);
-        GameState expected = new GameState(expectedBoardSetup, 0);
+        GameState expected = new GameState(expectedBoardSetup, 32);
 
-        actual = gameMoveService.calculateMovement("right", actual, 0);
+        actual = gameMoveService.calculateMovement("right", actual);
 
         assertEquals(expected, actual);
     }

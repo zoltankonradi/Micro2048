@@ -12,7 +12,7 @@ import java.util.List;
 @Slf4j
 public class GameMoveService {
 
-    public GameState calculateMovement(String direction, GameState oldState, Integer score) {
+    public GameState calculateMovement(String direction, GameState oldState) {
         if (!validateDirectionInput(direction)) return null;
         GameState newState = new GameState(oldState);
 
@@ -29,21 +29,6 @@ public class GameMoveService {
     }
 
     private void move(GameState state, String direction) {
-
-//        switch (direction) {
-//            case "left":
-//                moveLeft(state);
-//                break;
-//            case "right":
-//                moveRight(state);
-//                break;
-//            case "up":
-//                moveUp(state);
-//                break;
-//            case "down":
-//                moveDown(state);
-//                break;
-//        }
         // First we have to fill all the gaps
         shift(state, direction, false);
         // Second, we have to combine adjacent tiles with the same values
@@ -64,9 +49,9 @@ public class GameMoveService {
                     int adjacentFieldIndex = getAdjacentFieldIndex(direction, j, k);
 
                     if (canCombineTiles) {
-                        combineFields(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
+                        combineFields(state, currentFieldIndex, adjacentFieldIndex);
                     } else {
-                        shiftField(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
+                        shiftField(state, currentFieldIndex, adjacentFieldIndex);
                     }
                 }
             }
@@ -135,164 +120,8 @@ public class GameMoveService {
     }
 
 
-
-    private void moveDown(GameState state) {
-        shiftDown(state);
-        combineDown(state);
-        shiftDown(state);
-    }
-
-    private void shiftDown(GameState state) {
-        for (int i = 0; i < 3; i++) {
-
-            for (int j = 8; j > (-1 + i * 4); j-=4) {
-
-                for (int k = 0; k < 4; k++) {
-
-                    int currentFieldIndex = j + k;
-                    int adjacentFieldIndex = j + k + 4;
-
-                    shiftField(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
-                }
-            }
-        }
-    }
-
-    private void combineDown(GameState state) {
-        for (int i = 0; i < 3; i++) {
-
-            for (int j = 8; j > (-1 + i * 4); j-=4) {
-
-                for (int k = 0; k < 4; k++) {
-
-                    int currentFieldIndex = j + k;
-                    int adjacentFieldIndex = j + k + 4;
-
-                    combineFields(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
-                }
-            }
-        }
-    }
-
-
-    private void moveUp(GameState state) {
-        shiftUp(state);
-        combineUp(state);
-        shiftUp(state);
-    }
-
-    private void shiftUp(GameState state) {
-        for (int i = 0; i < 3; i++) {
-
-            for (int j = 4; j < (13 - i * 4); j+=4) {
-
-                for (int k = 0; k < 4; k++) {
-
-                    int currentFieldIndex = j + k;
-                    int adjacentFieldIndex = j + k - 4;
-
-                    shiftField(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
-                }
-            }
-        }
-    }
-
-    private void combineUp(GameState state) {
-        for (int i = 0; i < 3; i++) {
-
-            for (int j = 4; j < (13 - i * 4); j+=4) {
-
-                for (int k = 0; k < 4; k++) {
-
-                    int currentFieldIndex = j + k;
-                    int adjacentFieldIndex = j + k - 4;
-
-                    combineFields(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
-                }
-            }
-        }
-    }
-
-
-    private void moveLeft(GameState state) {
-        shiftLeft(state);
-        combineLeft(state);
-        shiftLeft(state);
-    }
-
-    private void shiftLeft(GameState state) {
-        for(int i = 0; i<3; i++){
-
-            for (int j = 13; j < 16 - i; j++) {
-
-                for (int k = 0; k < 4; k++) {
-
-                    int currentFieldIndex = j - k * 4;
-                    int adjacentFieldIndex = j - k * 4 - 1;
-
-                    shiftField(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
-                }
-            }
-        }
-    }
-
-    private void combineLeft(GameState state) {
-        for(int i = 0; i<3; i++){
-
-            for (int j = 13; j < 16 - i; j++) {
-
-                for (int k = 0; k < 4; k++) {
-
-                    int currentFieldIndex = j - k * 4;
-                    int adjacentFieldIndex = j - k * 4 - 1;
-
-                    combineFields(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
-                }
-            }
-        }
-    }
-
-
-    private void moveRight(GameState state) {
-        shiftRight(state);
-        combineRight(state);
-        shiftRight(state);
-    }
-
-    private void shiftRight(GameState state) {
-        for (int i = 0; i < 3; i++) {
-
-            for (int j = 14; j > 11 + i; j--) {
-
-                for (int k = 0; k < 4; k++) {
-
-                    int currentFieldIndex = j - k * 4;
-                    int adjacentFieldIndex = j - k * 4 + 1;
-
-                    shiftField(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
-                }
-            }
-        }
-    }
-
-    private void combineRight(GameState state) {
-        for (int i = 0; i < 3; i++) {
-
-            for (int j = 14; j > 11 + i; j--) {
-
-                for (int k = 0; k < 4; k++) {
-
-                    int currentFieldIndex = j - k * 4;
-                    int adjacentFieldIndex = j - k * 4 + 1;
-
-                    combineFields(state.getBoardSetup(), currentFieldIndex, adjacentFieldIndex, state.getScore());
-                }
-            }
-        }
-    }
-
-
-    private void shiftField(List<Integer> fields, int currentFieldIndex, int adjacentFieldIndex, Integer score) {
+    private void shiftField(GameState state, int currentFieldIndex, int adjacentFieldIndex) {
+        List<Integer> fields = state.getBoardSetup();
         if (!fields.get(currentFieldIndex).equals(0)) {
             if (fields.get(adjacentFieldIndex).equals(0)) {
                 fields.set(adjacentFieldIndex, fields.get(currentFieldIndex));
@@ -301,11 +130,12 @@ public class GameMoveService {
         }
     }
 
-    private void combineFields(List<Integer> fields, int currentFieldIndex, int adjacentFieldIndex, Integer score) {
+    private void combineFields(GameState state, int currentFieldIndex, int adjacentFieldIndex) {
+        List<Integer> fields = state.getBoardSetup();
         if (fields.get(adjacentFieldIndex).equals(fields.get(currentFieldIndex))) {
             fields.set(adjacentFieldIndex, fields.get(adjacentFieldIndex)*2);
             fields.set(currentFieldIndex, 0);
-            score+=fields.get(adjacentFieldIndex)*2;
+            state.setScore(state.getScore()+fields.get(adjacentFieldIndex));
         }
     }
 

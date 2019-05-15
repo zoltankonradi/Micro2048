@@ -21,7 +21,7 @@ public class GameMoveController {
                                  @RequestParam("boardSetup") String boardSetup,
                                  @RequestParam("score") Integer score) {
         GameState oldState = new GameState(boardSetup, score);
-        GameState newState = gameMoveService.calculateMovement(direction, oldState, score);
+        GameState newState = gameMoveService.calculateMovement(direction, oldState);
 
         return newState;
     }
