@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -29,12 +30,64 @@ public class GameMoveService {
     }
 
     private void move(GameState state, String direction) {
-        // First we have to fill all the gaps
-        shift(state, direction, false);
-        // Second, we have to combine adjacent tiles with the same values
-        shift(state, direction, true);
-        // Third, we have to fill the gaps that are left after tiles have been combined
-        shift(state, direction, false);
+        if (!state.isOver()) {
+            // First we have to fill all the gaps
+            shift(state, direction, false);
+            // Second, we have to combine adjacent tiles with the same values
+            shift(state, direction, true);
+            // Third, we have to fill the gaps that are left after tiles have been combined
+            shift(state, direction, false);
+
+            placeNewNumber(state);
+
+            checkWinCondition(state);
+        }
+    }
+
+    private void checkWinCondition(GameState state) {
+        if (!state.getBoardSetup().contains(0)) {
+            boolean isOver = true;
+            for (int i = 0; i < state.getBoardSetup().size(); i++) {
+
+                if (tileHasNeighborWithSameValue(state.getBoardSetup(), i)) {
+                    isOver = false;
+                    break;
+                }
+            }
+            state.setOver(isOver);
+        }
+    }
+
+    private boolean tileHasNeighborWithSameValue(List<Integer> boardSetup, int index) {
+        //Gets the neighbouring indexes from the one dimensional list
+        List<Integer> neighbouringIndexes = new ArrayList<>();
+
+        if(index < 12) neighbouringIndexes.add(index + 4);
+        if(index > 3) neighbouringIndexes.add(index - 4);
+        if(index > 0 && ((index - 1) % 4) != 3) neighbouringIndexes.add(index - 1);
+        if(index < 15 && ((index + 1) % 4) != 0) neighbouringIndexes.add(index + 1);
+
+        for (int neighbouringIndex: neighbouringIndexes) {
+            if(boardSetup.get(index).equals(boardSetup.get(neighbouringIndex))) return true;
+        }
+        return false;
+    }
+
+    private void placeNewNumber(GameState state) {
+        if (state.getBoardSetup().contains(0)) {
+            int newNumber = new Random().nextInt(10) == 9 ? 4 : 2;
+            List<Integer> emptyIndexes = new ArrayList<>();
+
+            for (int i = 0; i < state.getBoardSetup().size(); i++) {
+                if (state.getBoardSetup().get(i) == 0) {
+                    emptyIndexes.add(i);
+                }
+            }
+            //Get a random index that has a 0 at its location
+            int newNumbersIndex = emptyIndexes.get(new Random().nextInt(emptyIndexes.size()));
+
+            state.getBoardSetup().set(newNumbersIndex, newNumber);
+        }
     }
 
     private void shift(GameState state, String direction, boolean canCombineTiles) {
