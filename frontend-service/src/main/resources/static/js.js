@@ -15,10 +15,22 @@ function getNewQuote() {
     };
 }
 ////////////////////// BACKGROUND IMAGE //////////////////////
-function changeBackgroundImage() {
-
+function getBackgroundImage() {
+    const Http = new XMLHttpRequest();
+    const url='http://localhost:60002/picture';
+    Http.open("GET", url);
+    Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:60002");
+    Http.send();
+    Http.onreadystatechange=(e)=>{
+        console.log(Http.responseText);
+        changeBackgroundImage(Http.responseText);
+    };
 }
 
+function changeBackgroundImage(image) {
+    //const currentImage = document.getElementsByClassName("active")[0].previousSibling;
+
+}
 
 ////////////////////// GAME LOGIC //////////////////////
 document.onkeydown = function(e) {
