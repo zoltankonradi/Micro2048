@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -15,6 +16,7 @@ public class GameMoveService {
 
     public GameState calculateMovement(String direction, GameState oldState) {
         if (!validateDirectionInput(direction)) return null;
+
         GameState newState = new GameState(oldState);
 
         // Game board modelled like this:
@@ -24,28 +26,22 @@ public class GameMoveService {
         // 12 13 14 15
         // as it is a simple array, not a multi-dimensional one
 
-        move(newState, direction);
+        if (!newState.isOver()) {
+
+            shiftEachTile(newState, direction);
+
+            if(!oldState.equals(newState)) placeNewNumber(newState);
+
+            checkWinCondition(newState);
+        }
 
         return newState;
     }
 
-    private void move(GameState state, String direction) {
-        if (!state.isOver()) {
-            // First we have to fill all the gaps
-            shift(state, direction, false);
-            // Second, we have to combine adjacent tiles with the same values
-            shift(state, direction, true);
-            // Third, we have to fill the gaps that are left after tiles have been combined
-            shift(state, direction, false);
-
-            placeNewNumber(state);
-
-            checkWinCondition(state);
-        }
-    }
-
     private void checkWinCondition(GameState state) {
+
         if (!state.getBoardSetup().contains(0)) {
+
             boolean isOver = true;
             for (int i = 0; i < state.getBoardSetup().size(); i++) {
 
@@ -90,7 +86,21 @@ public class GameMoveService {
         }
     }
 
-    private void shift(GameState state, String direction, boolean canCombineTiles) {
+    private void shiftEachTile(GameState state, String direction) {
+        // Create a list that stores if each index has a modified value in it
+        // [ 0, 0, 0, 0,
+        //   0, 0, 0, 0,
+        //   4, 4, 4, 4,
+        //   4, 4, 4, 4 ]
+        // [false, false, false, false,
+        //  false, false, false, false,
+        //  true, true, true, true,
+        //  true, true, true, true ]
+        //
+        // isIndexModified.get(i) tells us if the value at index i in the
+        // boardSetup has been changed in this movement already
+        List<Boolean> isIndexModified = new ArrayList<>(Collections.nCopies(16, false));
+
         for (int i = 0; i < 3; i++) {
 
             List<Integer> loopValues = getCenterLoopValues(direction, i);
@@ -101,10 +111,21 @@ public class GameMoveService {
                     int currentFieldIndex = getCurrentFieldIndex(direction, j, k);
                     int adjacentFieldIndex = getAdjacentFieldIndex(direction, j, k);
 
-                    if (canCombineTiles) {
-                        combineFields(state, currentFieldIndex, adjacentFieldIndex);
-                    } else {
-                        shiftField(state, currentFieldIndex, adjacentFieldIndex);
+                    List<Integer> fields = state.getBoardSetup();
+
+                    if (!fields.get(currentFieldIndex).equals(0)) {
+                        // If the neighboring field is a zero, then replace the current value
+                        // with the zero(shiftEachTile it one step in the given direction)
+                        // and move the modified flag as well
+                        if (fields.get(adjacentFieldIndex).equals(0)) {
+                            shiftTile(state, currentFieldIndex, adjacentFieldIndex, isIndexModified);
+                        }
+                        // If the neighboring field has the same value as the current one, then add this one on top of that
+                        // and replace this field's value with a 0
+                        // It should not add values together that have been modified in this movement already
+                        else if (fields.get(adjacentFieldIndex).equals(fields.get(currentFieldIndex))) {
+                            combineTiles(state, currentFieldIndex, adjacentFieldIndex, isIndexModified);
+                        }
                     }
                 }
             }
@@ -173,22 +194,27 @@ public class GameMoveService {
     }
 
 
-    private void shiftField(GameState state, int currentFieldIndex, int adjacentFieldIndex) {
+    private void shiftTile(GameState state, int currentFieldIndex, int adjacentFieldIndex, List<Boolean> isIndexModified) {
         List<Integer> fields = state.getBoardSetup();
-        if (!fields.get(currentFieldIndex).equals(0)) {
-            if (fields.get(adjacentFieldIndex).equals(0)) {
-                fields.set(adjacentFieldIndex, fields.get(currentFieldIndex));
-                fields.set(currentFieldIndex, 0);
-            }
-        }
+
+        fields.set(adjacentFieldIndex, fields.get(currentFieldIndex));
+        fields.set(currentFieldIndex, 0);
+
+        isIndexModified.set(adjacentFieldIndex, isIndexModified.get(currentFieldIndex));
+        isIndexModified.set(currentFieldIndex, false);
     }
 
-    private void combineFields(GameState state, int currentFieldIndex, int adjacentFieldIndex) {
+    private void combineTiles(GameState state, int currentFieldIndex, int adjacentFieldIndex, List<Boolean> isIndexModified) {
         List<Integer> fields = state.getBoardSetup();
-        if (fields.get(adjacentFieldIndex).equals(fields.get(currentFieldIndex))) {
+
+        if(!isIndexModified.get(adjacentFieldIndex) && !isIndexModified.get(currentFieldIndex)){
+
             fields.set(adjacentFieldIndex, fields.get(adjacentFieldIndex)*2);
             fields.set(currentFieldIndex, 0);
             state.setScore(state.getScore()+fields.get(adjacentFieldIndex));
+
+            isIndexModified.set(adjacentFieldIndex, true);
+            isIndexModified.set(currentFieldIndex, false);
         }
     }
 
