@@ -72,7 +72,6 @@ function sendGameState(keypress) {
     }
 }
 
-
 function changeGameState(newGameState) {
 
     const squares = document.getElementsByClassName("square");

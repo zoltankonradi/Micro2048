@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
+
 @SpringBootApplication
 @EnableEurekaClient
 public class PictureServiceApplication {
@@ -28,5 +29,4 @@ public class PictureServiceApplication {
             pictureService.addURL("https://images.wallpaperscraft.com/image/cat_fat_look_72684_1920x1080.jpg");
         };
     }
-
 }
