@@ -305,4 +305,37 @@ class GameMoveServiceTest {
 
         assertNull(actual);
     }
+
+    @Test
+    public void testMovementThatChangesStatePutsNewNumberOnBoard() {
+        List<Integer> initialBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                4, 0, 0, 0,
+                4, 0, 0, 0,
+                8, 0, 0, 0);
+        GameState actual = new GameState(initialBoardSetup, 0);
+
+        List<Integer> expectedBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                0, 0, 0, 4,
+                0, 0, 0, 4,
+                0, 0, 0, 8);
+        GameState expected = new GameState(expectedBoardSetup, 0);
+
+        actual = gameMoveService.calculateMovement("right", actual);
+
+        List<Integer> matchingIndexes = Arrays.asList(7, 11, 15);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
+
+        int numberOfFilledTiles = 0;
+        for (int tileValue: actual.getBoardSetup()) {
+            if (tileValue != 0) {
+                numberOfFilledTiles++;
+            }
+        }
+        assertEquals(4, numberOfFilledTiles);
+    }
 }
