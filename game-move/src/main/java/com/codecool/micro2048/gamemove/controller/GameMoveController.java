@@ -4,11 +4,13 @@ package com.codecool.micro2048.gamemove.controller;
 import com.codecool.micro2048.gamemove.model.GameState;
 import com.codecool.micro2048.gamemove.service.GameMoveService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin("http://localhost:60001")
 public class GameMoveController {
 
     @Autowired
