@@ -2,6 +2,7 @@ function init() {
     setInterval(getNewQuote, 5000);
     setInterval(getBackgroundImage, 3000);
 }
+
 ////////////////////// QUOTE //////////////////////
 function getNewQuote() {
     let quote = document.getElementById("quote-text");
@@ -11,10 +12,10 @@ function getNewQuote() {
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:8095");
     Http.send();
     Http.onreadystatechange=(e)=>{
-        console.log(Http.responseText);
         quote.innerText = JSON.parse(Http.responseText).quote;
     };
 }
+
 ////////////////////// BACKGROUND IMAGE //////////////////////
 function getBackgroundImage() {
     const Http = new XMLHttpRequest();
@@ -23,7 +24,6 @@ function getBackgroundImage() {
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:60002");
     Http.send();
     Http.onreadystatechange=(e)=>{
-        console.log(Http.responseText);
         changeBackgroundImage(Http.responseText);
     };
 }
@@ -53,6 +53,7 @@ document.onkeydown = function(e) {
             break;
     }
 };
+
 function sendGameState(keypress) {
     const squares = document.getElementsByClassName("square");
     const score = document.getElementById("score-text").innerText;
@@ -70,8 +71,6 @@ function sendGameState(keypress) {
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:60003");
     Http.send();
     Http.onreadystatechange=(e)=>{
-        console.log(Http.responseText);
-        console.log(JSON.parse(Http.responseText));
         changeGameState(JSON.parse(Http.responseText));
     }
 }
@@ -107,4 +106,5 @@ function changeColors(square, value) {
         square.style.backgroundColor = '#fff';
     }
 }
+
 init();

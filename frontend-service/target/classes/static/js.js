@@ -1,6 +1,5 @@
 function init() {
-    // setInterval(getNewQuote, 5000);
-    // setInterval(getBackgroundImage, 3500);
+    setInterval(getNewQuote, 5000);
     setInterval(getBackgroundImage, 3000);
 }
 ////////////////////// QUOTE //////////////////////
@@ -103,9 +102,7 @@ function changeColors(square, value) {
     } else if (value < 16 && value >= 8) {
         square.style.backgroundColor = '#ffd65b';
     } else if (value < 8 && value >= 4) {
-        square.style.backgroundColor = '#ffeb79';
-    } else if (value < 4 && value >= 2) {
-        square.style.backgroundColor = '#fff4ba';
+        square.style.backgroundColor = '#fff180';
     } else {
         square.style.backgroundColor = '#fff';
     }
