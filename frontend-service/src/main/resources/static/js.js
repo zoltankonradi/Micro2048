@@ -1,6 +1,16 @@
 function init() {
-    // setInterval(getNewQuote, 5000);
-    backgroundPictureMovementOnKeyPress()
+    backgroundPictureMovementOnKeyPress();
+    setInterval(getNewQuote, 5000);
+    initColors();
+}
+
+function initColors() {
+    const squares = document.getElementsByClassName("square");
+    for (let square of squares) {
+        if (square.innerText === '2') {
+            square.style.backgroundColor = '#fff4ba';
+        }
+    }
 }
 
 ////////////////////// QUOTE //////////////////////
@@ -12,7 +22,6 @@ function getNewQuote() {
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:8095");
     Http.send();
     Http.onreadystatechange=(e)=>{
-        console.log(Http.responseText);
         quote.innerText = JSON.parse(Http.responseText).quote;
     };
 }
@@ -238,8 +247,6 @@ function sendGameState(keypress) {
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:60003");
     Http.send();
     Http.onreadystatechange=(e)=>{
-        console.log(Http.responseText);
-        console.log(JSON.parse(Http.responseText));
         changeGameState(JSON.parse(Http.responseText));
     }
 }
@@ -270,7 +277,7 @@ function changeColors(square, value) {
     } else if (value < 16 && value >= 8) {
         square.style.backgroundColor = '#ffd65b';
     } else if (value < 8 && value >= 4) {
-        square.style.backgroundColor = '#ffeb79';
+        square.style.backgroundColor = '#fff180';
     } else if (value < 4 && value >= 2) {
         square.style.backgroundColor = '#fff4ba';
     } else {
