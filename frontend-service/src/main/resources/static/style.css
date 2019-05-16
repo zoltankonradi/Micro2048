@@ -33,7 +33,10 @@ body {
     margin: 0 auto;
 }
 .container {
-    margin-top: 15px;
+    left: 50%;
+    top: 50%;
+    margin-top: -255px;
+    margin-left: -480px;
     position: absolute;
     z-index: 1000;
 }
