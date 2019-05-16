@@ -1,6 +1,8 @@
 function init() {
-    setInterval(getNewQuote, 5000);
+    // setInterval(getNewQuote, 5000);
+    backgroundPictureMovementOnKeyPress()
 }
+
 ////////////////////// QUOTE //////////////////////
 function getNewQuote() {
     let quote = document.getElementById("quote-text");
@@ -14,8 +16,49 @@ function getNewQuote() {
         quote.innerText = JSON.parse(Http.responseText).quote;
     };
 }
+
 ////////////////////// BACKGROUND IMAGE //////////////////////
-function getBackgroundImage() {
+
+function backgroundPictureMovementOnKeyPress() {
+    document.addEventListener("keydown", function (e) {
+        handleBackgroundChange(e.key);
+    })
+}
+
+function handleBackgroundChange(keyDown) {
+    //Get HTML elements we're working on
+    let pictureElements = getPictureElements();
+    let outSlidingImage = pictureElements.outSlidingImage;
+    let inSlidingImage = pictureElements.inSlidingImage;
+    let updatingImage = pictureElements.updatingImage;
+
+    updateImage(updatingImage);
+}
+
+function getPictureElements() {
+    let outSlidingImage = document.getElementsByClassName("active-picture")[0];
+    let inSlidingImage;
+    let updatingImage;
+
+    if (outSlidingImage === document.getElementById("background-pictures").firstElementChild ||
+        outSlidingImage === document.getElementById("background-pictures").lastElementChild) {
+
+        inSlidingImage = document.getElementsByClassName("inactive-picture")[0];
+        updatingImage = document.getElementsByClassName("inactive-picture")[1];
+    } else {
+
+        inSlidingImage = document.getElementsByClassName("inactive-pictures")[1];
+        updatingImage = document.getElementsByClassName("inactive-picture")[0];
+    }
+
+    return {
+        outSlidingImage: outSlidingImage,
+        inSlidingImage: inSlidingImage,
+        updatingImage: updatingImage
+    }
+}
+
+function updateImage(imageToUpdate) {
     const Http = new XMLHttpRequest();
     const url='http://localhost:60002/picture';
     Http.open("GET", url);
@@ -23,7 +66,7 @@ function getBackgroundImage() {
     Http.send();
     Http.onreadystatechange=(e)=>{
         console.log(Http.responseText);
-        changeBackgroundImage(Http.responseText);
+        imageToUpdate.src = Http.responseText;
     };
 }
 
@@ -49,6 +92,7 @@ document.onkeydown = function(e) {
             break;
     }
 };
+
 function sendGameState(keypress) {
     const squares = document.getElementsByClassName("square");
     const score = document.getElementById("score-text").innerText;
@@ -105,4 +149,5 @@ function changeColors(square, value) {
         square.style.backgroundColor = '#fff';
     }
 }
+
 init();
