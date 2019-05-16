@@ -1,4 +1,4 @@
-package com.codecool.micro2048.frontendservice.controller.service;
+package com.codecool.micro2048.frontendservice.service;
 
 import org.springframework.stereotype.Service;
 import java.util.Random;

@@ -1,7 +1,8 @@
 package com.codecool.micro2048.frontendservice.controller;
 
-import com.codecool.micro2048.frontendservice.controller.service.NewBoardGenerator;
-import com.codecool.micro2048.frontendservice.controller.service.QuoteService;
+import com.codecool.micro2048.frontendservice.service.NewBoardGenerator;
+import com.codecool.micro2048.frontendservice.service.PictureService;
+import com.codecool.micro2048.frontendservice.service.QuoteService;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +16,10 @@ public class FrontEndController {
         QuoteService quoteService = new QuoteService();
         JSONObject json = new JSONObject(quoteService.getQuote());
         NewBoardGenerator newBoard = new NewBoardGenerator();
+        PictureService pictureService = new PictureService();
         model.addAttribute("quote", json.getString("quote"));
         model.addAttribute("board", newBoard.generateNewBoard());
+        model.addAttribute("pictures", pictureService.getRandomPictures());
         return "game";
     }
 

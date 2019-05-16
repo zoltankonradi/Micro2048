@@ -1,5 +1,7 @@
 function init() {
     // setInterval(getNewQuote, 5000);
+    // setInterval(getBackgroundImage, 3500);
+    setInterval(getBackgroundImage, 3000);
 }
 ////////////////////// QUOTE //////////////////////
 function getNewQuote() {
@@ -28,8 +30,11 @@ function getBackgroundImage() {
 }
 
 function changeBackgroundImage(image) {
-    //const currentImage = document.getElementsByClassName("active")[0].previousSibling;
-
+    let lastImage = document.getElementsByClassName("active")[0].previousElementSibling;
+    if (lastImage == null) {
+        lastImage = document.getElementById("last-picture");
+    }
+    lastImage.firstElementChild.src=image;
 }
 
 ////////////////////// GAME LOGIC //////////////////////
