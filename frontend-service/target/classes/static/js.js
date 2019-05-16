@@ -1,18 +1,6 @@
 function init() {
     setInterval(getNewQuote, 5000);
-    setInterval(getBackgroundImage, 3000);
-    initColors();
 }
-
-function initColors() {
-    const squares = document.getElementsByClassName("square");
-    for (let square of squares) {
-        if (square.innerText === '2') {
-            square.style.backgroundColor = '#fff4ba';
-        }
-    }
-}
-
 ////////////////////// QUOTE //////////////////////
 function getNewQuote() {
     let quote = document.getElementById("quote-text");
@@ -22,10 +10,10 @@ function getNewQuote() {
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:8095");
     Http.send();
     Http.onreadystatechange=(e)=>{
+        console.log(Http.responseText);
         quote.innerText = JSON.parse(Http.responseText).quote;
     };
 }
-
 ////////////////////// BACKGROUND IMAGE //////////////////////
 function getBackgroundImage() {
     const Http = new XMLHttpRequest();
@@ -34,16 +22,14 @@ function getBackgroundImage() {
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:60002");
     Http.send();
     Http.onreadystatechange=(e)=>{
+        console.log(Http.responseText);
         changeBackgroundImage(Http.responseText);
     };
 }
 
 function changeBackgroundImage(image) {
-    let lastImage = document.getElementsByClassName("active")[0].previousElementSibling;
-    if (lastImage == null) {
-        lastImage = document.getElementById("last-picture");
-    }
-    lastImage.firstElementChild.src=image;
+    //const currentImage = document.getElementsByClassName("active")[0].previousSibling;
+
 }
 
 ////////////////////// GAME LOGIC //////////////////////
@@ -63,7 +49,6 @@ document.onkeydown = function(e) {
             break;
     }
 };
-
 function sendGameState(keypress) {
     const squares = document.getElementsByClassName("square");
     const score = document.getElementById("score-text").innerText;
@@ -81,6 +66,8 @@ function sendGameState(keypress) {
     Http.setRequestHeader("Access-Control-Allow-Origin", "http:localhost:60003");
     Http.send();
     Http.onreadystatechange=(e)=>{
+        console.log(Http.responseText);
+        console.log(JSON.parse(Http.responseText));
         changeGameState(JSON.parse(Http.responseText));
     }
 }
@@ -92,31 +79,13 @@ function changeGameState(newGameState) {
     for (let i = 0; i < squares.length; i++) {
         if (newGameState.boardSetup[i] === 0) {
             squares[i].innerText = "\xa0";
-            changeColors(squares[i], 0);
         } else {
             squares[i].innerText = newGameState.boardSetup[i];
-            changeColors(squares[i], newGameState.boardSetup[i]);
         }
     }
+
     document.getElementById("score-text").innerText = newGameState.score;
-}
 
-function changeColors(square, value) {
-    if (value >= 64) {
-        square.style.backgroundColor = '#ff4d09';
-    } else if (value < 64 && value >= 32) {
-        square.style.backgroundColor = '#ff9c23';
-    } else if (value < 32 && value >= 16) {
-        square.style.backgroundColor = '#ffc33b';
-    } else if (value < 16 && value >= 8) {
-        square.style.backgroundColor = '#ffd65b';
-    } else if (value < 8 && value >= 4) {
-        square.style.backgroundColor = '#fff180';
-    } else if (value < 4 && value >= 2) {
-        square.style.backgroundColor = '#fff4ba';
-    } else {
-        square.style.backgroundColor = '#fff';
-    }
-}
 
+}
 init();
