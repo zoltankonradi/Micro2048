@@ -50,33 +50,37 @@ function setInSlidingImagePosition(inSlidingImage, inSlidingImagePosition) {
 }
 
 function slidePictures(outSlidingImage, inSlidingImage, keyDown) {
-    inSlidingImage.classList.replace("inactive-picture", "active-picture");
-
     let positions = getSlidingPicturePositions(keyDown);
     let inSlidingImageStarterPosition = positions.inSlidingImageStarterPosition;
     let outSlidingImageFinishingPosition = positions.outSlidingImageFinishingPosition;
 
+    let transitionLength = 100;
+    let transitionSteps = 10;
+    let canStop = {canStop: false};
+
+    inSlidingImage.classList.replace("inactive-picture", "active-picture");
     setInSlidingImagePosition(inSlidingImage, inSlidingImageStarterPosition);
 
-    let transitionLength = 500;
-    let transitionSteps = 25;
 
     let movementInterval = setInterval(function () {
-        timeStep(inSlidingImage, inSlidingImageStarterPosition, outSlidingImage, outSlidingImageFinishingPosition, transitionLength, transitionSteps);
+        if (!canStop.canStop) {
+            timeStep(inSlidingImage, inSlidingImageStarterPosition, outSlidingImage, outSlidingImageFinishingPosition, transitionLength, transitionSteps, canStop);
+        } else {
+            clearInterval(movementInterval);
+            outSlidingImage.classList.replace("active-picture", "inactive-picture");
+            setInSlidingImagePosition(inSlidingImage, {left: 0, right:0, top: 0});
+            document.addEventListener("keydown", backgroundChangerEventListener);
+        }
+
     }, transitionLength/transitionSteps);
-
-    setTimeout(function () {
-        outSlidingImage.classList.replace("active-picture", "inactive-picture");
-
-        setInSlidingImagePosition(inSlidingImage, {left: 0, right:0, top: 0});
-
-        clearInterval(movementInterval);
-        document.addEventListener("keydown", backgroundChangerEventListener);
-    }, transitionLength);
 }
 
-function timeStep(inSlidingImage, inSlidingImageStarterPosition, outSlidingImage, outSlidingImageFinishingPosition, transitionLength, transitionSteps) {
+function timeStep(inSlidingImage, inSlidingImageStarterPosition, outSlidingImage, outSlidingImageFinishingPosition, transitionLength, transitionSteps, canStop) {
     let q = transitionLength/transitionSteps;
+
+    console.log(inSlidingImage.style.left);
+    console.log(inSlidingImage.style.right);
+    console.log(inSlidingImage.style.top);
 
     if(inSlidingImageStarterPosition.left !== 0) {
         inSlidingImage.style.left = inSlidingImageStarterPosition.left > 0 ?
@@ -109,6 +113,10 @@ function timeStep(inSlidingImage, inSlidingImageStarterPosition, outSlidingImage
             (Number.parseInt(outSlidingImage.style.top)+100/q + "%") :
             (Number.parseInt(outSlidingImage.style.top)-100/q + "%");
     }
+
+    if (Number.parseInt(inSlidingImage.style.top) === 0 && inSlidingImageStarterPosition.top !== 0) canStop.canStop = true;
+    if (Number.parseInt(inSlidingImage.style.left) === 0 && inSlidingImageStarterPosition.left !== 0) canStop.canStop = true;
+    if (Number.parseInt(inSlidingImage.style.right) === 0 && inSlidingImageStarterPosition.right !== 0) canStop.canStop = true;
 }
 
 function getSlidingPicturePositions(keyDown) {
