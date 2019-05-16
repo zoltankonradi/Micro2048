@@ -1,6 +1,16 @@
 function init() {
     setInterval(getNewQuote, 5000);
     setInterval(getBackgroundImage, 3000);
+    initColors();
+}
+
+function initColors() {
+    const squares = document.getElementsByClassName("square");
+    for (let square of squares) {
+        if (square.innerText === '2') {
+            square.style.backgroundColor = '#fff4ba';
+        }
+    }
 }
 
 ////////////////////// QUOTE //////////////////////
@@ -102,6 +112,8 @@ function changeColors(square, value) {
         square.style.backgroundColor = '#ffd65b';
     } else if (value < 8 && value >= 4) {
         square.style.backgroundColor = '#fff180';
+    } else if (value < 4 && value >= 2) {
+        square.style.backgroundColor = '#fff4ba';
     } else {
         square.style.backgroundColor = '#fff';
     }
