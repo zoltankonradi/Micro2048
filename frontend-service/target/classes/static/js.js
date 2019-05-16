@@ -79,30 +79,13 @@ function changeGameState(newGameState) {
     for (let i = 0; i < squares.length; i++) {
         if (newGameState.boardSetup[i] === 0) {
             squares[i].innerText = "\xa0";
-            changeColors(squares[i], 0);
         } else {
             squares[i].innerText = newGameState.boardSetup[i];
-            changeColors(squares[i], newGameState.boardSetup[i]);
         }
     }
-    document.getElementById("score-text").innerText = newGameState.score;
-}
 
-function changeColors(square, value) {
-    if (value >= 64) {
-        square.style.backgroundColor = '#ff4d09';
-    } else if (value < 64 && value >= 32) {
-        square.style.backgroundColor = '#ff9c23';
-    } else if (value < 32 && value >= 16) {
-        square.style.backgroundColor = '#ffc33b';
-    } else if (value < 16 && value >= 8) {
-        square.style.backgroundColor = '#ffd65b';
-    } else if (value < 8 && value >= 4) {
-        square.style.backgroundColor = '#ffeb79';
-    } else if (value < 4 && value >= 2) {
-        square.style.backgroundColor = '#fff4ba';
-    } else {
-        square.style.backgroundColor = '#fff';
-    }
+    document.getElementById("score-text").innerText = newGameState.score;
+
+
 }
 init();

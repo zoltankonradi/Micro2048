@@ -1,0 +1,87 @@
+.col-xs-4 {
+    padding: 0;
+}
+.btn-default {
+    background-color: white;
+    border-width: 1px;
+    border-color: black;
+}
+body {
+    background-color: white;
+    /*background-image: url("https://images.wallpaperscraft.com/image/cat_surprise_look_striped_96597_1920x1080.jpg");*/
+}
+#score-text {
+    background-color: white;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+#quote-text {
+    background-color: white;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+.text-center {
+    margin: auto;
+    padding-bottom: 15px;
+}
+#carouselExampleSlidesOnly {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+.container {
+    margin-top: 15px;
+    position: absolute;
+    z-index: 1000;
+}
+header.media {
+    margin-bottom: 15px;
+}
+header .media-right {
+    text-align: center;
+    padding-top: 10px;
+}
+header .media-object {
+    width: 90px;
+    height: 90px;
+    margin: 10px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 8px #303030;
+}
+
+.game-container {
+    max-width: 1000px;
+}
+.game-container .row {
+    margin-bottom: 2rem;
+}
+.game-container .square {
+    width: 100%;
+    height: 0;
+    padding-top: 30%;
+    padding-bottom: 68%;
+    padding-right: 40px;
+    padding-left: 40px;
+    font-size: 3rem;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+}
+.square:hover{
+    background-color: white;
+}
+.funfact {
+    margin-top: 21px;
+}
+
+footer {
+    background: #464545;
+    margin-top: 20px;
+    padding: 20px 0 50px 0;
+}
+footer img {
+    filter: invert(100%) contrast(0.45);
+}

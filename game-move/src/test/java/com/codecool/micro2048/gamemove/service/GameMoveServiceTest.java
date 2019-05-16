@@ -38,7 +38,11 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("left", actual);
 
-        assertEquals(expected, actual);
+        List<Integer> matchingIndexes = Arrays.asList(0, 4, 8, 12);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
     }
 
     @Test
@@ -59,7 +63,11 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("right", actual);
 
-        assertEquals(expected, actual);
+        List<Integer> matchingIndexes = Arrays.asList(3, 7, 11, 15);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
     }
 
     @Test
@@ -80,7 +88,11 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("up", actual);
 
-        assertEquals(expected, actual);
+        List<Integer> matchingIndexes = Arrays.asList(0, 1, 2, 3);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
     }
 
     @Test
@@ -101,7 +113,11 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("down", actual);
 
-        assertEquals(expected, actual);
+        List<Integer> matchingIndexes = Arrays.asList(12, 13, 14, 15);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
     }
 
     @Test
@@ -122,7 +138,11 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("down", actual);
 
-        assertEquals(expected, actual);
+        List<Integer> matchingIndexes = Arrays.asList(8, 9, 10, 11, 12, 13, 14, 15);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
     }
 
     @Test
@@ -143,7 +163,11 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("up", actual);
 
-        assertEquals(expected, actual);
+        List<Integer> matchingIndexes = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
     }
 
     @Test
@@ -164,7 +188,11 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("left", actual);
 
-        assertEquals(expected, actual);
+        List<Integer> matchingIndexes = Arrays.asList(0, 1, 4, 5, 8, 9, 12, 13);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
     }
 
     @Test
@@ -185,7 +213,11 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("right", actual);
 
-        assertEquals(expected, actual);
+        List<Integer> matchingIndexes = Arrays.asList(2, 3, 6, 7, 10, 11, 14, 15);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
     }
 
     @Test
@@ -232,6 +264,78 @@ class GameMoveServiceTest {
 
         actual = gameMoveService.calculateMovement("down", actual);
 
+        List<Integer> matchingIndexes = Arrays.asList(8, 12);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
+    }
+
+    @Test
+    public void testDoesntAddNewTileIfGameStateDoesntChangeOnMovement() {
+        List<Integer> initialBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                4, 0, 0, 0,
+                4, 0, 0, 0,
+                8, 0, 0, 0);
+        GameState actual = new GameState(initialBoardSetup, 0);
+
+        List<Integer> expectedBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                4, 0, 0, 0,
+                4, 0, 0, 0,
+                8, 0, 0, 0);
+        GameState expected = new GameState(expectedBoardSetup, 0);
+
+        actual = gameMoveService.calculateMovement("left", actual);
+
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testWrongInputReturnsNull() {
+        List<Integer> initialBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                4, 0, 0, 0,
+                4, 0, 0, 0,
+                8, 0, 0, 0);
+        GameState actual = new GameState(initialBoardSetup, 0);
+
+        actual = gameMoveService.calculateMovement("not a direction", actual);
+
+        assertNull(actual);
+    }
+
+    @Test
+    public void testMovementThatChangesStatePutsNewNumberOnBoard() {
+        List<Integer> initialBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                4, 0, 0, 0,
+                4, 0, 0, 0,
+                8, 0, 0, 0);
+        GameState actual = new GameState(initialBoardSetup, 0);
+
+        List<Integer> expectedBoardSetup = Arrays.asList(
+                0, 0, 0, 0,
+                0, 0, 0, 4,
+                0, 0, 0, 4,
+                0, 0, 0, 8);
+        GameState expected = new GameState(expectedBoardSetup, 0);
+
+        actual = gameMoveService.calculateMovement("right", actual);
+
+        List<Integer> matchingIndexes = Arrays.asList(7, 11, 15);
+
+        for (int matchingIndex : matchingIndexes) {
+            assertEquals(expected.getBoardSetup().get(matchingIndex), actual.getBoardSetup().get(matchingIndex));
+        }
+
+        int numberOfFilledTiles = 0;
+        for (int tileValue: actual.getBoardSetup()) {
+            if (tileValue != 0) {
+                numberOfFilledTiles++;
+            }
+        }
+        assertEquals(4, numberOfFilledTiles);
     }
 }

@@ -22,7 +22,11 @@ public class GameState {
     public GameState(String boardSetupString, Integer score) {
         try {
             List<String> boardSetupWithStrings = Arrays.asList(boardSetupString.split(","));
-            this.boardSetup = boardSetupWithStrings.stream().mapToInt(Integer::valueOf).boxed().collect(Collectors.toList());
+            this.boardSetup = boardSetupWithStrings
+                    .stream()
+                    .mapToInt(Integer::valueOf)
+                    .boxed()
+                    .collect(Collectors.toList());
             this.score = score;
         } catch (NumberFormatException e) {
             log.error("Game state string couldn't be parsed into integer list: " + boardSetupString);
@@ -31,12 +35,14 @@ public class GameState {
 
     public GameState(List<Integer> boardSetup, Integer score) {
         if(boardSetup.size()!=16) throw new IllegalArgumentException("Not enough numbers to fill the board.");
-        this.boardSetup = boardSetup;
+        this.boardSetup = new ArrayList<>();
+        this.boardSetup.addAll(boardSetup);
         this.score = score;
     }
 
     public GameState(GameState state) {
-        this.boardSetup = state.getBoardSetup();
+        this.boardSetup = new ArrayList<>();
+        this.boardSetup.addAll(state.getBoardSetup());
         this.isOver = state.isOver();
         this.score = state.getScore();
     }
