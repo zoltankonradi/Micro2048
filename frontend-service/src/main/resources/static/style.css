@@ -8,7 +8,6 @@
 }
 body {
     background-color: white;
-    /*background-image: url("https://images.wallpaperscraft.com/image/cat_surprise_look_striped_96597_1920x1080.jpg");*/
 }
 #score-text {
     background-color: white;
@@ -81,26 +80,14 @@ footer img {
     filter: invert(100%) contrast(0.45);
 }
 
-/*#carouselExampleSlidesOnly {*/
-/*    position: absolute;*/
-/*    left: 0;*/
-/*    right: 0;*/
-/*    margin: 0 auto;*/
-/*}*/
+.active-picture {
+    position: absolute;
+    display: block!important;
+}
 
-/*.in-sliding-picture {*/
-/*    position: absolute;*/
-/*    transition: left 0.5s, right 0.5s;*/
-/*    left: -100%;*/
-/*    right: 100%;*/
-/*}*/
-
-/*.out-sliding-picture {*/
-/*    position: absolute;*/
-/*    transition: left 0.5s, right 0.5s;*/
-/*    left: 0%;*/
-/*    right: 0%;*/
-/*}*/
+.inactive-picture {
+    display: none!important;
+}
 
 #background-pictures {
     width: 100%;
@@ -108,22 +95,3 @@ footer img {
     overflow: hidden;
 }
 
-.in-sliding-picture {
-    position: absolute;
-    transition: left 0.5s, right 0.5s;
-    bottom: 80%;
-}
-
-.out-sliding-picture {
-    position: absolute;
-    transition: left 0.5s, right 0.5s;
-    top: 20%;
-}
-
-.active-picture {
-    display: block!important;
-}
-
-.inactive-picture {
-    display: none!important;
-}

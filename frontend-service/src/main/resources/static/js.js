@@ -20,9 +20,15 @@ function getNewQuote() {
 ////////////////////// BACKGROUND IMAGE //////////////////////
 
 function backgroundPictureMovementOnKeyPress() {
-    document.addEventListener("keydown", function (e) {
-        handleBackgroundChange(e.key);
-    })
+    document.addEventListener("keydown", backgroundChangerEventListener)
+}
+
+function backgroundChangerEventListener(e) {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight" && e.key !== "ArrowUp" && e.key !== "ArrowDown") {
+        return;
+    }
+    document.removeEventListener("keydown", backgroundChangerEventListener);
+    handleBackgroundChange(e.key);
 }
 
 function handleBackgroundChange(keyDown) {
@@ -33,6 +39,125 @@ function handleBackgroundChange(keyDown) {
     let updatingImage = pictureElements.updatingImage;
 
     updateImage(updatingImage);
+
+    slidePictures(outSlidingImage, inSlidingImage, keyDown);
+}
+
+function setInSlidingImagePosition(inSlidingImage, inSlidingImagePosition) {
+    inSlidingImage.style.left = inSlidingImagePosition.left + "%";
+    inSlidingImage.style.right = inSlidingImagePosition.right + "%";
+    inSlidingImage.style.top = inSlidingImagePosition.top + "%";
+}
+
+function slidePictures(outSlidingImage, inSlidingImage, keyDown) {
+    inSlidingImage.classList.replace("inactive-picture", "active-picture");
+
+    let positions = getSlidingPicturePositions(keyDown);
+    let inSlidingImageStarterPosition = positions.inSlidingImageStarterPosition;
+    let outSlidingImageFinishingPosition = positions.outSlidingImageFinishingPosition;
+
+    setInSlidingImagePosition(inSlidingImage, inSlidingImageStarterPosition);
+
+    let transitionLength = 500;
+    let transitionSteps = 25;
+
+    let movementInterval = setInterval(function () {
+        timeStep(inSlidingImage, inSlidingImageStarterPosition, outSlidingImage, outSlidingImageFinishingPosition, transitionLength, transitionSteps);
+    }, transitionLength/transitionSteps);
+
+    setTimeout(function () {
+        outSlidingImage.classList.replace("active-picture", "inactive-picture");
+
+        setInSlidingImagePosition(inSlidingImage, {left: 0, right:0, top: 0});
+
+        clearInterval(movementInterval);
+        document.addEventListener("keydown", backgroundChangerEventListener);
+    }, transitionLength);
+}
+
+function timeStep(inSlidingImage, inSlidingImageStarterPosition, outSlidingImage, outSlidingImageFinishingPosition, transitionLength, transitionSteps) {
+    let q = transitionLength/transitionSteps;
+
+    if(inSlidingImageStarterPosition.left !== 0) {
+        inSlidingImage.style.left = inSlidingImageStarterPosition.left > 0 ?
+            (Number.parseInt(inSlidingImage.style.left)-100/q + "%") :
+            (Number.parseInt(inSlidingImage.style.left)+100/q + "%");
+    }
+    if(inSlidingImageStarterPosition.right !== 0){
+        inSlidingImage.style.right = inSlidingImageStarterPosition.right > 0 ?
+            (Number.parseInt(inSlidingImage.style.right)-100/q + "%") :
+            (Number.parseInt(inSlidingImage.style.right)+100/q + "%");
+    }
+    if(inSlidingImageStarterPosition.top !== 0){
+        inSlidingImage.style.top = inSlidingImageStarterPosition.top > 0 ?
+            (Number.parseInt(inSlidingImage.style.top)-100/q + "%") :
+            (Number.parseInt(inSlidingImage.style.top)+100/q + "%");
+    }
+
+    if(outSlidingImageFinishingPosition.left !== 0){
+        outSlidingImage.style.left = outSlidingImageFinishingPosition.left > 0 ?
+            (Number.parseInt(outSlidingImage.style.left)+100/q + "%") :
+            (Number.parseInt(outSlidingImage.style.left)-100/q + "%");
+    }
+    if(outSlidingImageFinishingPosition.right !== 0) {
+        outSlidingImage.style.right = outSlidingImageFinishingPosition.right > 0 ?
+            (Number.parseInt(outSlidingImage.style.right)+100/q + "%") :
+            (Number.parseInt(outSlidingImage.style.right)-100/q + "%");
+    }
+    if(outSlidingImageFinishingPosition.top !== 0){
+        outSlidingImage.style.top = outSlidingImageFinishingPosition.top > 0 ?
+            (Number.parseInt(outSlidingImage.style.top)+100/q + "%") :
+            (Number.parseInt(outSlidingImage.style.top)-100/q + "%");
+    }
+}
+
+function getSlidingPicturePositions(keyDown) {
+    let inSlidingImageStarterPosition = {
+        left: 0,
+        right: 0,
+        top: 0
+    };
+
+    let outSlidingImageFinishingPosition = {
+        left: 0,
+        right: 0,
+        top: 0
+    };
+
+    if (keyDown === "ArrowLeft") {
+
+        inSlidingImageStarterPosition.left = 100;
+        inSlidingImageStarterPosition.right = -100;
+
+        outSlidingImageFinishingPosition.left = -100;
+        outSlidingImageFinishingPosition.right = 100;
+
+    } else if (keyDown === "ArrowRight") {
+
+        inSlidingImageStarterPosition.left = -100;
+        inSlidingImageStarterPosition.right = 100;
+
+        outSlidingImageFinishingPosition.left = 100;
+        outSlidingImageFinishingPosition.right = -100;
+
+    } else if (keyDown === "ArrowDown") {
+
+        inSlidingImageStarterPosition.top = -100;
+
+        outSlidingImageFinishingPosition.top = 100;
+
+    } else if (keyDown === "ArrowUp") {
+
+        inSlidingImageStarterPosition.top = 100;
+
+        outSlidingImageFinishingPosition.top = -100;
+
+    }
+
+    return {
+        inSlidingImageStarterPosition: inSlidingImageStarterPosition,
+        outSlidingImageFinishingPosition: outSlidingImageFinishingPosition
+    }
 }
 
 function getPictureElements() {
@@ -47,7 +172,7 @@ function getPictureElements() {
         updatingImage = document.getElementsByClassName("inactive-picture")[1];
     } else {
 
-        inSlidingImage = document.getElementsByClassName("inactive-pictures")[1];
+        inSlidingImage = document.getElementsByClassName("inactive-picture")[1];
         updatingImage = document.getElementsByClassName("inactive-picture")[0];
     }
 
@@ -68,11 +193,6 @@ function updateImage(imageToUpdate) {
         console.log(Http.responseText);
         imageToUpdate.src = Http.responseText;
     };
-}
-
-function changeBackgroundImage(image) {
-    //const currentImage = document.getElementsByClassName("active")[0].previousSibling;
-
 }
 
 ////////////////////// GAME LOGIC //////////////////////
