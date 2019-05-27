@@ -10,3 +10,5 @@ Microservice 3: Random quote - Responsible for supplying random quotes for the u
 Microservice 4: Random picture - Responsible for supplying random pictures for the background.
 Microservice 5: Zuul Gateway
 Microservice 6: Eureka service
+
+![Game Preview](2048.jpg)
